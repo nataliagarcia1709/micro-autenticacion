@@ -3,6 +3,7 @@ package com.notas.microautenticacion.controller;
 import com.notas.microautenticacion.dto.AuthenticationResponse;
 import com.notas.microautenticacion.dto.LoginRequest;
 import com.notas.microautenticacion.dto.RegisterRequest;
+import com.notas.microautenticacion.dto.ValidationRequest;
 import com.notas.microautenticacion.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,8 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/signup")
-	public ResponseEntity<String> signup (@Valid @RequestBody RegisterRequest registerRequest) {
-		authService.signup(registerRequest);
-		return ResponseEntity.ok("Usuario creado exitosamente");
+	public ResponseEntity<?> signup (@Valid @RequestBody RegisterRequest registerRequest) {
+		return ResponseEntity.ok(authService.signup(registerRequest).getUserId());
 	}
 
 	@GetMapping("accountVerification/{token}")
@@ -36,4 +36,9 @@ public class AuthController {
 	public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
 	    return ResponseEntity.ok(authService.login(loginRequest));
 	}
+	@PostMapping("/validar")
+	public ResponseEntity<?> validarToken(@RequestBody ValidationRequest validationRequest) {
+		return ResponseEntity.ok(authService.validarToken(validationRequest));
+	}
+
 }

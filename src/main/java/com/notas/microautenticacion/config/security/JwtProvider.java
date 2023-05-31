@@ -1,6 +1,9 @@
 package com.notas.microautenticacion.config.security;
 
+import com.notas.microautenticacion.dto.ValidationRequest;
 import com.notas.microautenticacion.exceptions.PersonalizedException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import org.springframework.security.core.userdetails.User;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.Authentication;
@@ -44,6 +47,18 @@ public class JwtProvider {
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
             throw new PersonalizedException("Exception occured while retrieving public key from keystore");
         }
+    }
+
+    public String validarToken(ValidationRequest validationRequest) {
+
+        Jws<Claims> claims = Jwts.parser()
+                .setSigningKey(getPrivateKey())
+                .parseClaimsJws(validationRequest.getToken());
+
+        // Obtener el correo electrónico del usuario desde el token
+        String correo = claims.getBody().getSubject();
+
+        return correo;
     }
 }
 

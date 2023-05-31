@@ -3,6 +3,7 @@ package com.notas.microautenticacion.service;
 import com.notas.microautenticacion.dto.AuthenticationResponse;
 import com.notas.microautenticacion.dto.LoginRequest;
 import com.notas.microautenticacion.dto.RegisterRequest;
+import com.notas.microautenticacion.dto.ValidationRequest;
 import com.notas.microautenticacion.exceptions.PersonalizedException;
 import com.notas.microautenticacion.model.NotificationEmail;
 import com.notas.microautenticacion.model.User;
@@ -40,7 +41,7 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 
 	@Transactional
-	public void signup (RegisterRequest registerRequest) {
+	public User signup (RegisterRequest registerRequest) {
 
 		if (userRepository.existsByUsername(registerRequest.getUsername())) {
 			throw new IllegalArgumentException("El nombre de usuario ya está en uso");
@@ -64,6 +65,8 @@ public class AuthService {
 		mailService.sendMail(new NotificationEmail("Please Activate your Account",user.getEmail(),"Gracias por registrarte a, " +
 				"please click on the below url to activate your account : " +
 				"http://localhost:8080/api/auth/accountVerification/" + token));
+
+		return user;
 	}
 
 	private String generateVerificationToken(User user) {
@@ -96,4 +99,11 @@ public class AuthService {
 		String authenticationToken = jwtProvider.generateToken(authenticate);
 		return new AuthenticationResponse(authenticationToken, loginRequest.getEmail());
 	}
+
+	public User validarToken(ValidationRequest validationRequest){
+		User user = userRepository.findByEmail(jwtProvider.validarToken(validationRequest)).get();
+		// Devolver la información del usuario
+		return user;
+	}
+
 }
