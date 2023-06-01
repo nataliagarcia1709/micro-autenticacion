@@ -1,9 +1,6 @@
 package com.notas.microautenticacion.controller;
 
-import com.notas.microautenticacion.dto.AuthenticationResponse;
-import com.notas.microautenticacion.dto.LoginRequest;
-import com.notas.microautenticacion.dto.RegisterRequest;
-import com.notas.microautenticacion.dto.ValidationRequest;
+import com.notas.microautenticacion.dto.*;
 import com.notas.microautenticacion.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,8 @@ public class AuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup (@Valid @RequestBody RegisterRequest registerRequest) {
-		return ResponseEntity.ok(authService.signup(registerRequest).getUserId());
+		SignupResponse signupResponse = new SignupResponse(authService.signup(registerRequest).getUserId());
+		return ResponseEntity.ok(signupResponse);
 	}
 
 	@GetMapping("accountVerification/{token}")

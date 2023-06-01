@@ -1,9 +1,6 @@
 package com.notas.microautenticacion.service;
 
-import com.notas.microautenticacion.dto.AuthenticationResponse;
-import com.notas.microautenticacion.dto.LoginRequest;
-import com.notas.microautenticacion.dto.RegisterRequest;
-import com.notas.microautenticacion.dto.ValidationRequest;
+import com.notas.microautenticacion.dto.*;
 import com.notas.microautenticacion.exceptions.PersonalizedException;
 import com.notas.microautenticacion.model.NotificationEmail;
 import com.notas.microautenticacion.model.User;
@@ -97,13 +94,14 @@ public class AuthService {
 				loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authenticate);
 		String authenticationToken = jwtProvider.generateToken(authenticate);
-		return new AuthenticationResponse(authenticationToken, loginRequest.getEmail());
+		return new AuthenticationResponse(authenticationToken);
 	}
 
-	public User validarToken(ValidationRequest validationRequest){
+	public UserDTO validarToken(ValidationRequest validationRequest){
 		User user = userRepository.findByEmail(jwtProvider.validarToken(validationRequest)).get();
 		// Devolver la información del usuario
-		return user;
+		UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getEmail());
+		return userDTO;
 	}
 
 }
