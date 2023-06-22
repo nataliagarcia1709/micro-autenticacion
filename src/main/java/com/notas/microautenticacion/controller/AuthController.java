@@ -35,7 +35,7 @@ public class AuthController {
 	    return ResponseEntity.ok(authService.login(loginRequest));
 	}
 	@PostMapping("/validar")
-	public ResponseEntity<?> validarToken(@RequestBody ValidationRequest validationRequest) {
+	public ResponseEntity<ValidationResponse> validarToken(@RequestBody ValidationRequest validationRequest) {
 		return ResponseEntity.ok(authService.validarToken(validationRequest));
 	}
 

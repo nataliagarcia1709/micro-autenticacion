@@ -97,11 +97,10 @@ public class AuthService {
 		return new AuthenticationResponse(authenticationToken);
 	}
 
-	public UserDTO validarToken(ValidationRequest validationRequest){
-		User user = userRepository.findByEmail(jwtProvider.validarToken(validationRequest)).get();
-		// Devolver la información del usuario
-		UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getEmail());
-		return userDTO;
+	public ValidationResponse validarToken(ValidationRequest validationRequest){
+		User user = userRepository.findByEmail(jwtProvider.validarToken(validationRequest)).get();//buscar usuario por correo obtenido del token
+		ValidationResponse validationResponse = new ValidationResponse(user.getUserId(), user.getUsername(), user.getEmail());
+		return validationResponse;
 	}
 
 }

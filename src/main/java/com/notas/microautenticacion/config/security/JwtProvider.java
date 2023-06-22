@@ -53,7 +53,7 @@ public class JwtProvider {
 
         Jws<Claims> claims = Jwts.parser()
                 .setSigningKey(getPrivateKey())
-                .parseClaimsJws(validationRequest.getToken());
+                .parseClaimsJws(validationRequest.getToken());//validar token
 
         // Obtener el correo electrónico del usuario desde el token
         String correo = claims.getBody().getSubject();
